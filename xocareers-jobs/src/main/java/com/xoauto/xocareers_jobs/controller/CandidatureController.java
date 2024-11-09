@@ -3,6 +3,7 @@ package com.xoauto.xocareers_jobs.controller;
 
 import com.xoauto.xocareers_jobs.model.Candidature;
 import com.xoauto.xocareers_jobs.model.TypeStatus;
+import com.xoauto.xocareers_jobs.service.CandidatureService;
 import com.xoauto.xocareers_jobs.service.interfaces.ICandidatureService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.List;
 public class CandidatureController {
     private final ICandidatureService candidatureService;
 
-    public CandidatureController(ICandidatureService candidatureService) {
+    public CandidatureController(CandidatureService candidatureService) {
         this.candidatureService = candidatureService;
     }
 
