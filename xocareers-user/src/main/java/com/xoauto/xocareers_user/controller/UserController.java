@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
-
+@RequestMapping("/api/user")
 @RestController
 public class UserController {
     private final AuthenticationManager authenticationManager;
@@ -49,7 +49,7 @@ public class UserController {
         return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/candidate/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         User existingUser = userService.findUserByEmail(user.getEmail());
 
