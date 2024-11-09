@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 public class JobOffer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    int id;
+    long id;
 
     String title;
 

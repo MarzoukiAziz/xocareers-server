@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Candidature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    long id;
     String cover_letter;
 
     long candidateId;
