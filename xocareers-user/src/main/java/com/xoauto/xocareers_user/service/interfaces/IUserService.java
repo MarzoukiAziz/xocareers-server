@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface IUserService {
     List<User> selectAll();
+    User findUserById(long id);
     User findUserByEmail(String username);
     void saveUser(User user);
     void saveAdmin(User user);

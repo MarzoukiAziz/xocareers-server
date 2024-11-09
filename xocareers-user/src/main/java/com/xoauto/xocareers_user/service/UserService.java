@@ -29,6 +29,11 @@ public class UserService implements IUserService {
         return userRepository.findAll();
     }
 
+    public User findUserById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    }
+
     public User findUserByEmail(String username) {
         return userRepository.findByEmailIgnoreCase(username);
     }
