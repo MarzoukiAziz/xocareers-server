@@ -30,7 +30,7 @@ public class User {
     String email;
 
     String phone;
-
+    @JsonIgnore
     String password;
 
     @Column(updatable = false)

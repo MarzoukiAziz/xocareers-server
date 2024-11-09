@@ -49,7 +49,7 @@ public class UserController {
         return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/candidate/register")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         User existingUser = userService.findUserByEmail(user.getEmail());
 
