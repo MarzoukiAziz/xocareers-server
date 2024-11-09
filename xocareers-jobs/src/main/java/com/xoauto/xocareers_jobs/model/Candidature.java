@@ -24,9 +24,7 @@ public class Candidature {
 
     long resumeId;
 
-    @ManyToOne
-    @JoinColumn(name = "job_offer_id", nullable = false)
-    JobOffer jobOffer;
+    long jobOfferId;
 
     @Enumerated(EnumType.STRING)
     TypeStatus status;

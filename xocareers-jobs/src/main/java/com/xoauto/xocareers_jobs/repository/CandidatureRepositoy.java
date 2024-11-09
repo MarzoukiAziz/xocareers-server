@@ -13,9 +13,9 @@ public interface CandidatureRepositoy extends JpaRepository<Candidature, Long> {
     List<Candidature> findAllByCandidateId(long candidateId);
 
     @Query("Select c from Candidature c where c.status=:status and c.candidateId=:candidatureId")
-    List<Candidature> findAllByStatusAndCandidate(@Param("candidatureId") int candidatureId, @Param("status") TypeStatus status);
+    List<Candidature> findAllByStatusAndCandidate(@Param("candidatureId") long candidatureId, @Param("status") TypeStatus status);
 
     @Query("Select c from Candidature c where c.status=:status and c.jobOffer.id=:jobOfferId")
-    List<Candidature> findAllByStatusAndJobOffer(@Param("jobOfferId") int jobOfferId, @Param("status") TypeStatus status);
+    List<Candidature> findAllByStatusAndJobOffer(@Param("jobOfferId") long jobOfferId, @Param("status") TypeStatus status);
 
 }
