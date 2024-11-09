@@ -20,13 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * JwtRequestFilter is a component for handling JWT authentication in the Spring Security filter chain.
- * It extracts the JWT token from the Authorization header, validates it, and sets up the authentication
- * details in the SecurityContextHolder if the token is valid.
- *
- * @author Rezaur Rahman
- */
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -38,25 +32,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
 
 
-    /**
-     * Constructor for JwtRequestFilter class.
-     *
-     * @param jwtUtils the instance of utility class for JWT operations.
-     */
     public JwtRequestFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
-    /**
-     * Performs the actual JWT authentication logic. It extracts the JWT token from the Authorization header,
-     * validates it, and sets up the authentication details in the SecurityContextHolder if the token is valid.
-     *
-     * @param request     the incoming HttpServletRequest.
-     * @param response    the outgoing HttpServletResponse.
-     * @param filterChain the filter chain for processing the request.
-     * @throws ServletException if a servlet exception occurs.
-     * @throws IOException      if an I/O exception occurs.
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -85,12 +64,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Parses the JWT token from the Authorization header.
-     *
-     * @param request the incoming HttpServletRequest.
-     * @return the extracted JWT token or null if not found.
-     */
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader(AUTHORIZATION);
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(BEARER_PREFIX)) {
