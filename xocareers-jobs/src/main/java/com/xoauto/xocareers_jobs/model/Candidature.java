@@ -18,6 +18,8 @@ public class Candidature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
+    @Column(length = 4000)
     String cover_letter;
 
     long candidateId;

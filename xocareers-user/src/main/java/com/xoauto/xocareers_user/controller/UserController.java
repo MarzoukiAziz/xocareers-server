@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
-@RequestMapping("/api/user")
 @RestController
 public class UserController {
     private final AuthenticationManager authenticationManager;
@@ -27,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
         Authentication authentication;
 
@@ -48,6 +47,7 @@ public class UserController {
 
         return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -71,6 +71,11 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Connected");
+    }
+
     @GetMapping("/admin/all-users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.selectAll();
@@ -80,6 +85,11 @@ public class UserController {
     @GetMapping("/admin/email")
     public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
         User user = userService.findUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+    @GetMapping("/admin/id")
+    public ResponseEntity<User> getUserById(@RequestParam long id) {
+        User user = userService.findUserById(id);
         return ResponseEntity.ok(user);
     }
 

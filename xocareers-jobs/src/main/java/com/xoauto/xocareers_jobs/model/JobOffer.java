@@ -18,6 +18,7 @@ public class JobOffer {
 
     String title;
 
+    @Column(length = 4000)
     String description;
 
     String location;

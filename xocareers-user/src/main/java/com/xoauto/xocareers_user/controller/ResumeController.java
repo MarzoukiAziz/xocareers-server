@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resume")
+@RequestMapping("resume")
 public class ResumeController {
     private final ResumeService resumeService;
 

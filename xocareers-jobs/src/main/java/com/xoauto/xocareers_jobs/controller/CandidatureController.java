@@ -1,60 +1,34 @@
 package com.xoauto.xocareers_jobs.controller;
 
 
-import com.xoauto.xocareers_jobs.model.Candidature;
-import com.xoauto.xocareers_jobs.model.TypeStatus;
+import com.xoauto.xocareers_jobs.model.*;
 import com.xoauto.xocareers_jobs.service.CandidatureService;
 import com.xoauto.xocareers_jobs.service.interfaces.ICandidatureService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
-@RequestMapping("/api/candidature")
+@RequestMapping("candidature")
 public class CandidatureController {
     private final ICandidatureService candidatureService;
 
     public CandidatureController(CandidatureService candidatureService) {
         this.candidatureService = candidatureService;
     }
-
-    @GetMapping
-    public ResponseEntity<List<Candidature>> getAllCandidatures() {
-        List<Candidature> candidatures = candidatureService.getAllCandidatures();
-        return ResponseEntity.ok(candidatures);
-    }
-
-    @GetMapping("/job-offer")
-    public ResponseEntity<List<Candidature>> getJobOfferCandidatures(@RequestParam long jobOfferId) {
-        List<Candidature> candidatures = candidatureService.getCandidaturesByJobOffer(jobOfferId);
-        return ResponseEntity.ok(candidatures);
-    }
-
-    @GetMapping("/candidate")
-    public ResponseEntity<List<Candidature>> getCandidateCandidatures(@RequestParam long candidateId) {
-        List<Candidature> candidatures = candidatureService.getCandidaturesByCandidate(candidateId);
-        return ResponseEntity.ok(candidatures);
-    }
-
-    @GetMapping("/filter-job-offer")
-    public ResponseEntity<List<Candidature>> getFilterJobOfferCandidatures(@RequestParam long jobOfferId, @RequestParam TypeStatus status) {
-        List<Candidature> candidatures = candidatureService.getCandidaturesByStatusAndJobOffer(status, jobOfferId);
-        return ResponseEntity.ok(candidatures);
-    }
-
-    @GetMapping("/filter-candidate")
-    public ResponseEntity<List<Candidature>> getFilterCandidateCandidatures(@RequestParam long candidateId, @RequestParam TypeStatus status) {
-        List<Candidature> candidatures = candidatureService.getCandidaturesByStatusAndCandidate(status, candidateId);
+    @GetMapping("candidate/{id}")
+    public ResponseEntity<List<CandidatureJobDetails> > getAllCandidatureByCandidateId(@PathVariable long id) {
+        List<CandidatureJobDetails> candidatures = candidatureService.getCandidatureJobDetailsByCandidate(id);
         return ResponseEntity.ok(candidatures);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Candidature> getCandidatureById(@PathVariable long id) {
-        Candidature candidature = candidatureService.getCandidatureById(id);
+    public ResponseEntity<CandidatureDetails> getCandidatureById(@PathVariable long id) {
+        CandidatureDetails candidature = candidatureService.getCandidatureById(id);
         return ResponseEntity.ok(candidature);
     }
 

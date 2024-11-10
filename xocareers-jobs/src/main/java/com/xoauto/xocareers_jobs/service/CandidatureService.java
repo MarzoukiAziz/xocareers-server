@@ -1,55 +1,54 @@
 package com.xoauto.xocareers_jobs.service;
 
 
-import com.xoauto.xocareers_jobs.model.Candidature;
-import com.xoauto.xocareers_jobs.model.TypeStatus;
+import com.xoauto.xocareers_jobs.feign.CandidatureInterface;
+import com.xoauto.xocareers_jobs.model.*;
 import com.xoauto.xocareers_jobs.repository.CandidatureRepositoy;
 import com.xoauto.xocareers_jobs.service.interfaces.ICandidatureService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CandidatureService implements ICandidatureService {
 
     private final CandidatureRepositoy candidatureRepository;
+    private final CandidatureInterface candidatureInterface;
+    private final JobOfferService jobOfferService;
 
-    public CandidatureService( CandidatureRepositoy candidatureRepository) {
+    public CandidatureService( CandidatureRepositoy candidatureRepository, CandidatureInterface candidatureInterface, JobOfferService jobOfferService) {
         this.candidatureRepository = candidatureRepository;
+        this.candidatureInterface = candidatureInterface;
+        this.jobOfferService = jobOfferService;
     }
 
     @Override
-    public List<Candidature> getAllCandidatures() {
-        return candidatureRepository.findAll();
+    public List<CandidatureJobDetails>  getCandidatureJobDetailsByCandidate(long candidateId) {
+        List<Candidature> candidatures = candidatureRepository.findAllByCandidateId(candidateId);
+        List<CandidatureJobDetails> candidatureJobDetails = new ArrayList<>();
+        for (Candidature candidature : candidatures) {
+            CandidatureJobDetails   candidatureJobDetail = new CandidatureJobDetails();
+            Resume resume = candidatureInterface.getResume(candidature.getResumeId()).getBody();
+            JobOffer jobOffer = jobOfferService.getJobOfferById(candidature.getJobOfferId());
+            candidatureJobDetail.setResume(resume);
+            candidatureJobDetail.setJobOffer(jobOffer);
+            candidatureJobDetail.setCandidature(candidature);
+            candidatureJobDetails.add(candidatureJobDetail);
+        }
+        return candidatureJobDetails;
     }
 
-    @Override
-    public List<Candidature> getCandidaturesByJobOffer(long jobOfferId) {
-        return candidatureRepository.findAllByJobOfferId(jobOfferId);
-    }
-
-    @Override
-    public List<Candidature> getCandidaturesByCandidate(long candidateId) {
-        return candidatureRepository.findAllByCandidateId(candidateId);
-    }
-
-    @Override
-    public List<Candidature> getCandidaturesByStatusAndCandidate(TypeStatus status, long candidateId) {
-        return candidatureRepository.findAllByStatusAndCandidate(candidateId, status);
-    }
-
-
-    @Override
-    public List<Candidature> getCandidaturesByStatusAndJobOffer(TypeStatus status, long jobOfferId) {
-        return candidatureRepository.findAllByStatusAndJobOffer(jobOfferId, status);
-    }
-
-    @Override
-    public Candidature getCandidatureById(long id) {
-        return candidatureRepository.findById(id)
+    public CandidatureDetails getCandidatureById(long id) {
+        Candidature candidature =  candidatureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidature not found with id: " + id));
+
+        User candidate = candidatureInterface.getUserById(candidature.getCandidateId()).getBody();
+        Resume resume = candidatureInterface.getResume(candidature.getResumeId()).getBody();
+
+        return new CandidatureDetails(candidature,candidate,resume);
     }
 
     @Transactional

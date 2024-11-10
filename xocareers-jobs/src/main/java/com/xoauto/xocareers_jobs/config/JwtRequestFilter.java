@@ -1,6 +1,6 @@
-package com.xoauto.xocareers_user.config;
+package com.xoauto.xocareers_jobs.config;
 
-import com.xoauto.xocareers_user.util.JwtUtils;
+import com.xoauto.xocareers_jobs.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-    private static final String AUTHORIZATION = "Authorization ";
+    private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtUtils jwtUtils;
@@ -41,13 +41,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String headerName = headerNames.nextElement();
-                String headerValue = request.getHeader(headerName);
-                logger.info(headerName + ": " + headerValue);  // Log the header name and value
-            }
-
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.extractUsername(jwt);
@@ -56,15 +49,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                 .stream()
                                 .map(SimpleGrantedAuthority::new)
                                 .toList();
-                UserDetails userDetails = new User(username, null, grantedAuthorities);
 
+                UserDetails userDetails = new User(username, "", grantedAuthorities);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, grantedAuthorities);
+                        new UsernamePasswordAuthenticationToken(userDetails, "", grantedAuthorities);
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             logger.error("JWT authentication failed!");
         }
 
@@ -73,7 +67,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader(AUTHORIZATION);
-
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(BEARER_PREFIX)) {
             return headerAuth.substring(7);
         }
