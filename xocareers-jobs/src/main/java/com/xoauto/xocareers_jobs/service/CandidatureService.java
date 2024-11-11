@@ -41,6 +41,22 @@ public class CandidatureService implements ICandidatureService {
         return candidatureJobDetails;
     }
 
+    @Override
+    public List<CandidatureDetails> getCandidatureJobDetailsByJob(long jobId) {
+        List<Candidature> candidatures = candidatureRepository.findAllByJobOfferId(jobId);
+        List<CandidatureDetails> candidatureDetails = new ArrayList<>();
+        for (Candidature candidature : candidatures) {
+            CandidatureDetails   candidatureDetail = new CandidatureDetails();
+            Resume resume = candidatureInterface.getResume(candidature.getResumeId()).getBody();
+            User candidate = candidatureInterface.getUserById(candidature.getCandidateId()).getBody();
+            candidatureDetail.setResume(resume);
+            candidatureDetail.setCandidate(candidate);
+            candidatureDetail.setCandidature(candidature);
+            candidatureDetails.add(candidatureDetail);
+        }
+        return candidatureDetails;
+    }
+
     public CandidatureDetails getCandidatureById(long id) {
         Candidature candidature =  candidatureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidature not found with id: " + id));

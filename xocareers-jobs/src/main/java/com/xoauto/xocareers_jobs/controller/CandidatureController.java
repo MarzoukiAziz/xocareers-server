@@ -20,6 +20,8 @@ public class CandidatureController {
     public CandidatureController(CandidatureService candidatureService) {
         this.candidatureService = candidatureService;
     }
+
+    //// USER ///
     @GetMapping("candidate/{id}")
     public ResponseEntity<List<CandidatureJobDetails> > getAllCandidatureByCandidateId(@PathVariable long id) {
         List<CandidatureJobDetails> candidatures = candidatureService.getCandidatureJobDetailsByCandidate(id);
@@ -38,7 +40,16 @@ public class CandidatureController {
         return new ResponseEntity<>(createdCandidature, HttpStatus.CREATED);
     }
 
-    @PatchMapping
+    //// ADMIN ////
+
+    @GetMapping("/admin/job-offer/{id}")
+    public ResponseEntity<List<CandidatureDetails> > getAllCandidatureByJobID(@PathVariable long id) {
+        List<CandidatureDetails> candidatures = candidatureService.getCandidatureJobDetailsByJob(id);
+        return ResponseEntity.ok(candidatures);
+    }
+
+
+    @PatchMapping("/admin")
     public ResponseEntity<Candidature> updateCandidatureStatus(@RequestParam long candidatureId, @RequestParam TypeStatus status) {
         try {
             Candidature candidature = candidatureService.updateCandidatureStatus(candidatureId, status);
@@ -48,7 +59,7 @@ public class CandidatureController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteCandidatureById(@RequestParam long candidatureId) {
         try {
             candidatureService.deleteCandidature(candidatureId);

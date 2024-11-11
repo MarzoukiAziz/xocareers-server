@@ -20,29 +20,12 @@ public class JobOfferController {
         this.jobOfferService = jobOfferService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<JobOffer>> getAllJobOffers() {
-        List<JobOffer> jobOffers = jobOfferService.getAllJobOffers();
-        return ResponseEntity.ok(jobOffers);
-    }
+    //// PUBLIC ////
 
     @GetMapping("/only-active")
     public ResponseEntity<List<JobOffer>> getOnlyActiveJobOffers() {
         List<JobOffer> activeJobOffers = jobOfferService.getActiveJobOffers();
         return ResponseEntity.ok(activeJobOffers);
-    }
-
-    @GetMapping("/filter-type")
-    public ResponseEntity<List<JobOffer>> getFilterTypeJobOffers(@RequestParam TypeJobType type, @RequestParam boolean active) {
-        List<JobOffer> filteredJobOffers = jobOfferService.getJobOffersByType(type, active);
-        return ResponseEntity.ok(filteredJobOffers);
-
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<JobOffer>> searchJobOffers(@RequestParam String search, @RequestParam TypeJobType type, @RequestParam boolean active) {
-        List<JobOffer> filteredJobOffers = jobOfferService.searchJobOffers(search,type, active);
-        return ResponseEntity.ok(filteredJobOffers);
     }
 
     @GetMapping("/{id}")
@@ -51,20 +34,41 @@ public class JobOfferController {
         return ResponseEntity.ok(jobOffer);
     }
 
-    @PostMapping
+    //// ADMIN ////
+
+    @GetMapping("admin/all")
+    public ResponseEntity<List<JobOffer>> getAllJobOffers() {
+        List<JobOffer> jobOffers = jobOfferService.getAllJobOffers();
+        return ResponseEntity.ok(jobOffers);
+    }
+
+    @GetMapping("/admin/filter-type")
+    public ResponseEntity<List<JobOffer>> getFilterTypeJobOffers(@RequestParam TypeJobType type, @RequestParam boolean active) {
+        List<JobOffer> filteredJobOffers = jobOfferService.getJobOffersByType(type, active);
+        return ResponseEntity.ok(filteredJobOffers);
+
+    }
+
+    @GetMapping("/admin/search")
+    public ResponseEntity<List<JobOffer>> searchJobOffers(@RequestParam String search, @RequestParam TypeJobType type, @RequestParam boolean active) {
+        List<JobOffer> filteredJobOffers = jobOfferService.searchJobOffers(search,type, active);
+        return ResponseEntity.ok(filteredJobOffers);
+    }
+
+    @PostMapping("/admin")
     public ResponseEntity<JobOffer> createJobOffer(@RequestBody JobOffer jobOffer, @RequestParam long recruiterId) {
         JobOffer createdJobOffer = jobOfferService.addJobOffer(jobOffer,recruiterId);
         return new ResponseEntity<>(createdJobOffer, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/admin/{id}")
     public ResponseEntity<JobOffer> updateJobOffer(@PathVariable int id, @RequestBody JobOffer jobOffer, @RequestParam long recruiterId) {
         jobOffer.setId(id);
         JobOffer updatedJobOffer = jobOfferService.updateJobOffer(jobOffer,recruiterId);
         return new ResponseEntity<>(updatedJobOffer, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteJobOffer(@PathVariable long id) {
         try {
             jobOfferService.deleteJobOffer(id);

@@ -30,8 +30,9 @@ public class WebSecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(requestConfigurer -> requestConfigurer
+                        .requestMatchers(antMatcher("/job-offer/admin/**")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(antMatcher("/candidature/admin/**")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(antMatcher("/candidature/**")).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers(antMatcher("/job-offer/**")).hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
