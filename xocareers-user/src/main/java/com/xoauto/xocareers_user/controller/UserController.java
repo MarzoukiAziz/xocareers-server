@@ -2,9 +2,12 @@ package com.xoauto.xocareers_user.controller;
 
 import com.xoauto.xocareers_user.model.JwtResponse;
 import com.xoauto.xocareers_user.model.User;
+import com.xoauto.xocareers_user.repository.UserRepository;
 import com.xoauto.xocareers_user.service.UserService;
 import com.xoauto.xocareers_user.util.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +22,15 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService) {
+    public UserController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
+    //// PUBLIC ////
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
@@ -48,7 +54,6 @@ public class UserController {
         return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
-
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         User existingUser = userService.findUserByEmail(user.getEmail());
@@ -71,20 +76,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Connected");
-    }
-
     @GetMapping("/admin/all-users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.selectAll();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/admin/email")
+    @GetMapping("/user/email")
     public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
         User user = userService.findUserByEmail(email);
+
         return ResponseEntity.ok(user);
     }
     @GetMapping("/admin/id")

@@ -69,12 +69,7 @@ public class CandidatureService implements ICandidatureService {
 
     @Transactional
     @Override
-    public Candidature addCandidature(long jobOfferId, long candidateId, long resumeId, String cover_letter) {
-        Candidature candidature = new Candidature();
-        candidature.setJobOfferId(jobOfferId);
-        candidature.setCandidateId(candidateId);
-        candidature.setResumeId(resumeId);
-        candidature.setCover_letter(cover_letter);
+    public Candidature addCandidature(Candidature candidature) {
         return candidatureRepository.save(candidature);
     }
 

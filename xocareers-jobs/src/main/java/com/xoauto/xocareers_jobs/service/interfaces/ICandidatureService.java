@@ -11,7 +11,7 @@ public interface ICandidatureService {
     List<CandidatureJobDetails> getCandidatureJobDetailsByCandidate(long candidateId);
     List<CandidatureDetails> getCandidatureJobDetailsByJob(long jobId);
     CandidatureDetails getCandidatureById(long id);
-    Candidature addCandidature( long jobOfferId, long candidateId,long resumeId, String cover_letter);
+    Candidature addCandidature( Candidature candidature);
     Candidature updateCandidatureStatus(long candidatureId, TypeStatus status);
     boolean deleteCandidature(long id);
 }

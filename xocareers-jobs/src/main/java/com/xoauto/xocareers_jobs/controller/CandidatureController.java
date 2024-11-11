@@ -35,8 +35,8 @@ public class CandidatureController {
     }
 
     @PostMapping
-    public ResponseEntity<Candidature> createCandidature(@RequestParam long jobOfferId, @RequestParam long candidateId, @RequestParam long resumeId, @RequestParam String cover_letter) {
-        Candidature createdCandidature = candidatureService.addCandidature( jobOfferId,  candidateId, resumeId, cover_letter);
+    public ResponseEntity<Candidature> createCandidature(@RequestBody Candidature candidature) {
+        Candidature createdCandidature = candidatureService.addCandidature( candidature);
         return new ResponseEntity<>(createdCandidature, HttpStatus.CREATED);
     }
 
